@@ -26,9 +26,11 @@ app.get("/api/issues", (req,res)=>{
     res.json({_metadata:metadata, records:issues});
 });
 
-app.post('/app/issues', (req,res)=>{
+app.post("/api/issues", (req,res)=>{
+    console.log("posted!");
     const newIssue = req.body;
-    newIssue.id = issues.lenth+1;
+    console.log(newIssue);
+    newIssue.id = issues.length+1;
     newIssue.created = new Date();
     if(!newIssue.status) newIssue.status = "New";
     issues.push(newIssue);
