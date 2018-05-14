@@ -6,6 +6,36 @@ const app = express();
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
+const validIssueStatus = {
+    New:true,
+    Open:true,
+    Assigned:true,
+    Fixed:true,
+    Verified:true,
+    Close:true,
+};
+
+const issueFieldType={
+    id:"required",
+    status:"required",
+    owner:"required",
+    effort:"optional",
+    created:"required",
+    completionDate: "optional",
+    title:"required",
+};
+
+function validateIssue(issue){
+    for (const field in issueFieldType){
+        const type = issueFieldType[field];
+        if(!type){
+            delete issue[field];
+        } else if (type=="required" && !issue[field]){
+            return field+" is required.";
+        }
+    }
+}
+
 const issues =[
     {
         id: 1, status:'Open', owner:'Raven',
@@ -33,6 +63,11 @@ app.post("/api/issues", (req,res)=>{
     newIssue.id = issues.length+1;
     newIssue.created = new Date();
     if(!newIssue.status) newIssue.status = "New";
+    const err = validateIssue(newIssue);
+    if (err){
+        res.status(422).json({message:"Invalid request:" + err});
+        return;
+    }
     issues.push(newIssue);
     res.json(newIssue);
 });
