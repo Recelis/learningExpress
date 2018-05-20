@@ -76,3 +76,8 @@ app.post("/api/issues", (req,res)=>{
 app.listen(3000, function(){
     console.log('App started on port 3000');
 });
+
+// https://docs.mongodb.com/manual/installation/
+// start mongo: sudo service mongod start
+// sudo service mongod stop
+// sudo service mongod restart
