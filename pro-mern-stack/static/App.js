@@ -22,13 +22,21 @@ class IssueList extends React.Component {
         // console.log("the hell is happening!");
     }
     loadData() {
-        fetch('/api/issues').then(response => response.json()).then(data => {
-            console.log("Total count of records:", data._metadata.total_count);
-            data.records.forEach(issue => {
-                issue.created = new Date(issue.created);
-                if (issue.completionDate) issue.completionDate = new Date(issue.completionDate);
-            });
-            this.setState({ issues: data.records });
+        fetch('/api/issues').then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    console.log("Total count of records:", data._metadata.total_count);
+                    data.records.forEach(issue => {
+                        issue.created = new Date(issue.created);
+                        if (issue.completionDate) issue.completionDate = new Date(issue.completionDate);
+                    });
+                    this.setState({ issues: data.records });
+                });
+            } else {
+                response.json().then(error => {
+                    alert("Failed to fetch issues:" + error.message);
+                });
+            }
         }).catch(err => {
             console.log(err);
         });
@@ -83,7 +91,7 @@ class IssueFilter extends React.Component {
 
 function IssueTable(props) {
     // when it's not a single expression
-    const issueRows = props.issues.map(issue => React.createElement(IssueRow, { key: issue.id, issue: issue }));
+    const issueRows = props.issues.map(issue => React.createElement(IssueRow, { key: issue._id, issue: issue }));
     return React.createElement(
         'table',
         { className: 'bordered-table' },
@@ -145,7 +153,7 @@ React.createElement(
     React.createElement(
         'td',
         null,
-        props.issue.id
+        props.issue._id
     ),
     React.createElement(
         'td',

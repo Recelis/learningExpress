@@ -1,3 +1,5 @@
+// https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
 'use strict';
 const MongoClient = require('mongodb');
 
@@ -84,7 +86,7 @@ function testWithAsync(){
     },
     (insertResult, next)=>{
         console.log("Insert result:", insertResult.insetedId);
-        db.collcetion("employees").find({id:1}).toArray(next);
+        db.collection("employees").find({id:1}).toArray(next);
     },
     (docs, next)=>{
         console.log("Result of find:", docs);
